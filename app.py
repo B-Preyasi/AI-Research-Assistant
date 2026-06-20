@@ -6,6 +6,9 @@ from dotenv import load_dotenv
 
 # Load local environment variables (if any)
 load_dotenv()
+api_key = os.getenv("GEMINI_API_KEY", "")
+if api_key:
+    genai.configure(api_key=api_key)
 
 # App Page Configurations
 st.set_page_config(
@@ -143,18 +146,6 @@ if "summary_output" not in st.session_state:
 
 # Sidebar Setup
 with st.sidebar:
-    st.image("https://img.icons8.com/color/96/000000/education.png", width=70)
-    st.title("Settings")
-    
-    # API Key Configuration
-    st.subheader("🔑 API Authentication")
-    api_key_input = st.text_input(
-        "Enter Gemini API Key",
-        type="password",
-        value=os.getenv("GEMINI_API_KEY", ""),
-        help="Get an API Key from Google AI Studio. The key is processed locally and not stored."
-    )
-    
     # Model Selection
     model_choice = st.selectbox(
         "Choose Gemini Model",
@@ -162,28 +153,6 @@ with st.sidebar:
         index=0,
         help="Gemini 1.5 Flash is recommended for fast summaries. Gemini 1.5 Pro is excellent for complex analysis."
     )
-    
-    # Status Indicators
-    st.markdown("---")
-    st.subheader("⚙️ System Status")
-    if api_key_input:
-        st.markdown('<div class="status-badge status-success">🟢 Connected to Gemini</div>', unsafe_allow_html=True)
-        genai.configure(api_key=api_key_input)
-    else:
-        st.markdown('<div class="status-badge status-warning">🟡 Missing API Key</div>', unsafe_allow_html=True)
-        st.caption("Please configure your API Key to enable the AI engine.")
-        
-    st.markdown("""
-    <div class="sidebar-card">
-        <h4>💡 Quick Guide</h4>
-        <ol style="padding-left: 15px; margin: 0; font-size: 0.85rem; color: #CBD5E1;">
-            <li>Input API Key first.</li>
-            <li>Select a tab on the main page.</li>
-            <li>Upload a research PDF or write raw text.</li>
-            <li>Generate structured insights instantly.</li>
-        </ol>
-    </div>
-    """, unsafe_allow_html=True)
 
 # Main Application Layout
 st.markdown('<h1 class="title-gradient">🎓 AI Research Assistant</h1>', unsafe_allow_html=True)
@@ -240,9 +209,7 @@ with tab_summarize:
 
     # Summarization Execution
     if summarize_button:
-        if not api_key_input:
-            st.error("Please add your Gemini API Key in the sidebar before running.")
-        elif not pdf_text.strip():
+        if not pdf_text.strip():
             st.error("Please upload a PDF or enter some text to summarize.")
         else:
             with st.spinner("Running deep literature analysis..."):
@@ -316,30 +283,27 @@ with tab_chat:
             st.write(user_msg)
         st.session_state.chat_history.append({"role": "user", "content": user_msg})
         
-        if not api_key_input:
-            st.error("Please add your Gemini API Key in the sidebar before typing.")
-        else:
-            with st.spinner("Refining response..."):
-                try:
-                    # Construct message list history for Gemini chat format
-                    model = genai.GenerativeModel(model_choice)
-                    chat = model.start_chat(history=[])
-                    
-                    # Define research system guidelines in chat context
-                    chat_context = f"""You are a professional, peer-review-level research companion. Support the researcher with rigorous, academic, and logically sound advice. 
-                    Be constructive, suggest references or methodologies where appropriate, and push for scientific clarity.
-                    
-                    The researcher asks: {user_msg}
-                    """
-                    
-                    # Send message and get output
-                    response = chat.send_message(chat_context)
-                    
-                    with st.chat_message("assistant"):
-                        st.write(response.text)
-                    st.session_state.chat_history.append({"role": "assistant", "content": response.text})
-                except Exception as e:
-                    st.error(f"Error generating chat response: {str(e)}")
+        with st.spinner("Refining response..."):
+            try:
+                # Construct message list history for Gemini chat format
+                model = genai.GenerativeModel(model_choice)
+                chat = model.start_chat(history=[])
+                
+                # Define research system guidelines in chat context
+                chat_context = f"""You are a professional, peer-review-level research companion. Support the researcher with rigorous, academic, and logically sound advice. 
+                Be constructive, suggest references or methodologies where appropriate, and push for scientific clarity.
+                
+                The researcher asks: {user_msg}
+                """
+                
+                # Send message and get output
+                response = chat.send_message(chat_context)
+                
+                with st.chat_message("assistant"):
+                    st.write(response.text)
+                st.session_state.chat_history.append({"role": "assistant", "content": response.text})
+            except Exception as e:
+                st.error(f"Error generating chat response: {str(e)}")
 
 # ----------------- PAGE 3: DOCUMENT Q&A -----------------
 with tab_qa:
@@ -356,9 +320,7 @@ with tab_qa:
         qa_input = st.text_input("Ask a question about this paper:", placeholder="e.g. What datasets were used? What is the main baseline model?")
         
         if st.button("🔍 Query Document"):
-            if not api_key_input:
-                st.error("Please add your Gemini API Key in the sidebar first.")
-            elif not qa_input.strip():
+            if not qa_input.strip():
                 st.error("Please type a valid question.")
             else:
                 with st.spinner("Analyzing document references..."):
