@@ -52,48 +52,5 @@ streamlit run app.py
 
 ---
 
-## 🚀 How to Deploy on GitHub
-
-Follow these steps to push your local repository to GitHub:
-
-### Step 1: Initialize Git Local Repository
-Open your terminal in the project folder and run:
-```bash
-git init
-git add .
-git commit -m "Initial commit: AI Research Assistant Streamlit app"
-```
-
-### Step 2: Create a New GitHub Repository
-1. Go to your [GitHub account](https://github.com/) and click **New repository** (or visit `https://github.com/new`).
-2. Name your repository (e.g., `ai-research-assistant`).
-3. Leave "Initialize this repository with..." options **unchecked** (since we already initialized it locally).
-4. Click **Create repository**.
-
-### Step 3: Link and Push to GitHub
-Copy the commands from the GitHub instruction page and run them in your terminal:
-```bash
-git branch -M main
-git remote add origin https://github.com/<your-username>/<your-repo-name>.git
-git push -u origin main
-```
-
----
-
-## ☁️ Deploying to Streamlit Community Cloud (Free Hosting)
-
-Once your code is on GitHub, you can deploy it online for free:
-
-1. Sign up/log in at [Streamlit Share](https://share.streamlit.io/).
-2. Click **New app** and connect your GitHub account.
-3. Select your repository, the `main` branch, and set the main file path to `app.py`.
-4. In the **Advanced settings**, you can add your `GEMINI_API_KEY` under **Secrets**:
-   ```toml
-   GEMINI_API_KEY = "your_actual_api_key"
-   ```
-5. Click **Deploy!** Your app will be live on the web in a few minutes.
-
----
-
 ## 🔒 License
 This project is open-source and available under the [MIT License](LICENSE).
