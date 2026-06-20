@@ -1,0 +1,31 @@
+# Python virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache and distribution files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+build/
+dist/
+*.egg-info/
+
+# Streamlit config and secrets
+.streamlit/config.toml
+.streamlit/secrets.toml
+
+# IDE and local configuration
+.DS_Store
+.env
+.ipynb_checkpoints/
+.vscode/
+.idea/
+
+# Local database or temp storage
+*.db
+*.log
