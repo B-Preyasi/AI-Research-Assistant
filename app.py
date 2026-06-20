@@ -209,7 +209,9 @@ with tab_summarize:
 
     # Summarization Execution
     if summarize_button:
-        if not pdf_text.strip():
+        if not api_key:
+            st.error("🔑 **API Key Missing**: To run this app, please create a `.env` file in the project folder and set `GEMINI_API_KEY=your_key` (see the `.env.example` file for details).")
+        elif not pdf_text.strip():
             st.error("Please upload a PDF or enter some text to summarize.")
         else:
             with st.spinner("Running deep literature analysis..."):
@@ -283,27 +285,30 @@ with tab_chat:
             st.write(user_msg)
         st.session_state.chat_history.append({"role": "user", "content": user_msg})
         
-        with st.spinner("Refining response..."):
-            try:
-                # Construct message list history for Gemini chat format
-                model = genai.GenerativeModel(model_choice)
-                chat = model.start_chat(history=[])
-                
-                # Define research system guidelines in chat context
-                chat_context = f"""You are a professional, peer-review-level research companion. Support the researcher with rigorous, academic, and logically sound advice. 
-                Be constructive, suggest references or methodologies where appropriate, and push for scientific clarity.
-                
-                The researcher asks: {user_msg}
-                """
-                
-                # Send message and get output
-                response = chat.send_message(chat_context)
-                
-                with st.chat_message("assistant"):
-                    st.write(response.text)
-                st.session_state.chat_history.append({"role": "assistant", "content": response.text})
-            except Exception as e:
-                st.error(f"Error generating chat response: {str(e)}")
+        if not api_key:
+            st.error("🔑 **API Key Missing**: To run this app, please create a `.env` file in the project folder and set `GEMINI_API_KEY=your_key` (see the `.env.example` file for details).")
+        else:
+            with st.spinner("Refining response..."):
+                try:
+                    # Construct message list history for Gemini chat format
+                    model = genai.GenerativeModel(model_choice)
+                    chat = model.start_chat(history=[])
+                    
+                    # Define research system guidelines in chat context
+                    chat_context = f"""You are a professional, peer-review-level research companion. Support the researcher with rigorous, academic, and logically sound advice. 
+                    Be constructive, suggest references or methodologies where appropriate, and push for scientific clarity.
+                    
+                    The researcher asks: {user_msg}
+                    """
+                    
+                    # Send message and get output
+                    response = chat.send_message(chat_context)
+                    
+                    with st.chat_message("assistant"):
+                        st.write(response.text)
+                    st.session_state.chat_history.append({"role": "assistant", "content": response.text})
+                except Exception as e:
+                    st.error(f"Error generating chat response: {str(e)}")
 
 # ----------------- PAGE 3: DOCUMENT Q&A -----------------
 with tab_qa:
@@ -320,7 +325,9 @@ with tab_qa:
         qa_input = st.text_input("Ask a question about this paper:", placeholder="e.g. What datasets were used? What is the main baseline model?")
         
         if st.button("🔍 Query Document"):
-            if not qa_input.strip():
+            if not api_key:
+                st.error("🔑 **API Key Missing**: To run this app, please create a `.env` file in the project folder and set `GEMINI_API_KEY=your_key` (see the `.env.example` file for details).")
+            elif not qa_input.strip():
                 st.error("Please type a valid question.")
             else:
                 with st.spinner("Analyzing document references..."):
