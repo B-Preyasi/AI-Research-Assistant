@@ -144,14 +144,30 @@ if "uploaded_pdf_name" not in st.session_state:
 if "summary_output" not in st.session_state:
     st.session_state.summary_output = ""
 
+# Configure Gemini
+if api_key:
+    genai.configure(api_key=api_key)
+
+# Safe model loader
+def get_model(model_name):
+    try:
+        return genai.GenerativeModel(model_name)
+    except Exception:
+        # Fallback to a currently supported model
+        return genai.GenerativeModel("gemini-3.5-flash")
+
 # Sidebar Setup
 with st.sidebar:
-    # Model Selection
     model_choice = st.selectbox(
         "Choose Gemini Model",
-        options=["gemini-1.5-flash", "gemini-1.5-pro"],
+        options=[
+            "gemini-3.5-flash",
+            "gemini-3.5-pro",
+            "gemini-2.5-flash",
+            "gemini-2.5-pro"
+        ],
         index=0,
-        help="Gemini 1.5 Flash is recommended for fast summaries. Gemini 1.5 Pro is excellent for complex analysis."
+        help="Select the Gemini model."
     )
 
 # Main Application Layout
@@ -216,7 +232,7 @@ with tab_summarize:
         else:
             with st.spinner("Running deep literature analysis..."):
                 try:
-                    model = genai.GenerativeModel(model_choice)
+                    model = get_model(model_choice)
                     
                     system_prompt = f"""You are a senior academic researcher and professor. Generate a high-quality, professional, and detailed {detail_level} summary of the research paper provided below.
                     Structure your response using these exact markdown headers:
@@ -291,7 +307,7 @@ with tab_chat:
             with st.spinner("Refining response..."):
                 try:
                     # Construct message list history for Gemini chat format
-                    model = genai.GenerativeModel(model_choice)
+                    model = get_model(model_choice)
                     chat = model.start_chat(history=[])
                     
                     # Define research system guidelines in chat context
@@ -332,7 +348,7 @@ with tab_qa:
             else:
                 with st.spinner("Analyzing document references..."):
                     try:
-                        model = genai.GenerativeModel(model_choice)
+                        model = get_model(model_choice)
                         
                         prompt = f"""You are an expert research analyst. Answer the user's question by referencing the provided research paper content. 
                         Be precise, factual, and specify context details (e.g. section titles or figures) from the paper. 
