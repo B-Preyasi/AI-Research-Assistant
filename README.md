@@ -1,7 +1,7 @@
 # 🎓 AI Research Assistant
 
 ## 🚀 Live Demo
-[Live Streamlit App](https://your-app-url.streamlit.app)
+[Live Streamlit App](https://ai-research-assistant-jeqtwgf94qycnz2izfai6c.streamlit.app)
 
 A premium, interactive AI-powered assistant built with **Streamlit** and **Gemini 3.5/2.5 Pro & Flash** to accelerate academic and literature research. This tool helps researchers summarize papers, extract key methodologies, brainstorm hypotheses, and perform interactive Q&A on uploaded PDF documents.
 
