@@ -1,5 +1,8 @@
 # 🎓 AI Research Assistant
 
+<img width="1422" height="785" alt="Screenshot 2026-06-21 at 11 46 52 AM" src="https://github.com/user-attachments/assets/2f739dfa-6f4c-41de-911e-e440960bdb0f" />
+
+
 ## 🚀 Live Demo
 [Live Streamlit App](https://ai-research-assistant-jeqtwgf94qycnz2izfai6c.streamlit.app)
 
@@ -55,5 +58,3 @@ streamlit run app.py
 
 ---
 
-## 🔒 License
-This project is open-source and available under the [MIT License](LICENSE).
